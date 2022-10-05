@@ -26,7 +26,19 @@
 
 <body>
     <p id="demo"></p>
+    <p id="res"></p>
+
     <script>
+
+        async function userAction() {
+            const mangaDexUrl = 'https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc';
+            const response = await fetch(mangaDexUrl);
+            const myJson = await response.json(); //extract JSON from the http response
+            document.getElementById("res").innerHTML = myJson;
+        }
+
+        userAction();
+
         var date1 = new Date("07/24/2022");
         var date2 = new Date();
 
@@ -39,6 +51,7 @@
         //To display the final no. of days (result)
         document.getElementById("demo").innerHTML = Math.floor(Difference_In_Days) + " days";
     </script>
+
     <img src="ruri_bed.png" alt="Ruri Dragon in bed" class="center">
 </body>
 
