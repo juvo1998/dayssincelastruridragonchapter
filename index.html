@@ -30,14 +30,70 @@
 
     <script>
 
-        async function userAction() {
-            const mangaDexUrl = 'https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc';
-            const response = await fetch(mangaDexUrl);
-            const myJson = await response.json(); //extract JSON from the http response
-            document.getElementById("res").innerHTML = myJson;
-        }
+        class TodoAPI {
+            constructor(fetchMethod = (...args) => fetch(...args)) {
+                this.fetchMethod = fetchMethod;
+            }
 
-        userAction();
+            getTodos = async () =>
+                await this.fetchMethod("https://jsonplaceholder.typicode.com/todos");
+
+            getTodo = async (id) =>
+                await this.fetchMethod(`https://jsonplaceholder.typicode.com/todos/${id}`);
+        }
+        const proxyFetch = {
+            apply(_, __, args) {
+                console.log('proxy: ', args);
+                return { message: "proxy done" };
+            }
+        };
+        const proxiedFetch = new Proxy(fetch, proxyFetch);
+
+        const API = new TodoAPI(proxiedFetch);
+
+        (async () => {
+            await API.getTodos().then((res) => console.log(res));
+            console.log("Fetching single TODO");
+            await API.getTodo(3).then((res) => console.log(JSON.stringify(res, null, 2))) // spacing level = 2));
+        })();
+
+        // class MangaDexApi {
+        //     constructor(fetchMethod = (...args) => fetch(...args)) {
+        //         this.fetchMethod = fetchMethod;
+        //     }
+
+        //     mangaDexUrl = 'https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc';
+        //     getChapters = async () =>
+        //         await this.fetchMethod("mangaDexUrl");
+
+        //     getTodo = async (id) =>
+        //         await this.fetchMethod(`https://jsonplaceholder.typicode.com/todos/${id}`);
+        // }
+
+        // const proxyFetch = {
+        //     apply(_, __, args) {
+        //         console.log('proxy: ', args);
+        //         return { message: "proxy done" };
+        //     }
+        // };
+        // const proxiedFetch = new Proxy(fetch, proxyFetch);
+
+        // const API = new MangaDexApi(proxiedFetch);
+
+        // (async () => {
+        //     await API.getChapters().then((res) => console.log(res));
+        //     // console.log("Fetching single TODO");
+        //     // await API.getTodo(3).then((res) => console.log(res));
+        // })();
+
+        // async function userAction() {
+        //     const mangaDexUrl = 'https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc';
+        //     // const mangaDexUrl = 'https://api.thecatapi.com/v1/images/search';
+        //     const response = await fetch(mangaDexUrl);
+        //     const myJson = await response.json(); //extract JSON from the http response
+        //     document.getElementById("res").innerHTML = myJson;
+        // }
+        // userAction();
 
         var date1 = new Date("07/24/2022");
         var date2 = new Date();
