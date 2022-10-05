@@ -1,0 +1,29 @@
+<html>
+<style>
+    p {
+        color: red;
+        text-align: center;
+        font-size: 200px;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <p id="demo"></p>
+    <script>
+        parent.document.getElementsByTagName('iframe')[0].scrolling = "no";
+        var date1 = new Date("07/24/2022");
+        var date2 = new Date();
+
+        // To calculate the time difference of two dates
+        var Difference_In_Time = date2.getTime() - date1.getTime();
+
+        // To calculate the no. of days between two dates
+        var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
+        //To display the final no. of days (result)
+        document.getElementById("demo").innerHTML = Math.floor(Difference_In_Days);
+    </script>
+</body>
+
+</html>
