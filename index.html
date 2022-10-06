@@ -7,26 +7,157 @@
 <meta content="#49C5F7" data-react-helmet="true" name="theme-color" />
 <link rel="icon" href="https://i.imgur.com/MIzZ9gC.png">
 <style>
+    /* Absolute Center Spinner */
+    .loading {
+        position: fixed;
+        z-index: 999;
+        overflow: show;
+        margin: auto;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 50px;
+        height: 50px;
+    }
+
+    /* Transparent Overlay */
+    .loading:before {
+        content: '';
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* :not(:required) hides these rules from IE9 and below */
+    .loading:not(:required) {
+        /* hide "loading..." text */
+        font: 0/0 a;
+        color: transparent;
+        text-shadow: none;
+        background-color: transparent;
+        border: 0;
+    }
+
+    .loading:not(:required):after {
+        content: '';
+        display: block;
+        font-size: 10px;
+        width: 50px;
+        height: 50px;
+        margin-top: -0.5em;
+
+        border: 15px solid rgb(59, 59, 59);
+        border-radius: 100%;
+        border-bottom-color: transparent;
+        -webkit-animation: spinner 1s linear 0s infinite;
+        animation: spinner 1s linear 0s infinite;
+
+
+    }
+
+    /* Animation */
+
+    @-webkit-keyframes spinner {
+        0% {
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            -moz-transform: rotate(360deg);
+            -ms-transform: rotate(360deg);
+            -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    @-moz-keyframes spinner {
+        0% {
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            -moz-transform: rotate(360deg);
+            -ms-transform: rotate(360deg);
+            -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    @-o-keyframes spinner {
+        0% {
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            -moz-transform: rotate(360deg);
+            -ms-transform: rotate(360deg);
+            -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes spinner {
+        0% {
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            -moz-transform: rotate(360deg);
+            -ms-transform: rotate(360deg);
+            -o-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    .days {
+        color: rgb(0, 0, 0);
+        text-align: center;
+        font-size: 12em;
+        font-weight: bold;
+        margin-bottom: 40px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .stat {
+        color: rgb(0, 0, 0);
+        font-size: 1em;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+    }
+
+    img {
+        margin-bottom: 40px;
+    }
+
     @media screen and (orientation:portrait) {
         .plate {
             margin-left: 5%;
             margin-right: 5%;
-        }
-
-        .days {
-            color: rgb(0, 0, 0);
-            text-align: center;
-            font-size: 12em;
-            font-weight: bold;
-            margin-bottom: 40px;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .stat {
-            color: rgb(0, 0, 0);
-            font-size: 1em;
-            font-family: Arial, Helvetica, sans-serif;
-            text-align: center;
         }
 
         .center {
@@ -36,31 +167,12 @@
             width: 100%;
         }
 
-        img {
-            margin-bottom: 40px;
-        }
     }
 
     @media screen and (orientation:landscape) {
         .plate {
             margin-left: 0%;
             margin-right: 0%;
-        }
-
-        .days {
-            color: rgb(0, 0, 0);
-            text-align: center;
-            font-size: 12em;
-            font-weight: bold;
-            margin-bottom: 40px;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .stat {
-            color: rgb(0, 0, 0);
-            font-size: 1em;
-            font-family: Arial, Helvetica, sans-serif;
-            text-align: center;
         }
 
         .center {
@@ -70,55 +182,61 @@
             width: 30%;
         }
 
-        img {
-            margin-bottom: 40px;
-        }
+
     }
 </style>
 
 <body>
-    <div class="plate">
+    <div id="loading" class="loading">Loading&#8230;</div>
+    <div id="plate" hidden class="plate">
         <p id="demo" class="days"></p>
         <img src="ruri_bed.png" alt="Ruri Dragon in bed" class="center">
         <p id="lastChapter" class="stat"></p>
 
-        <script>
-            fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc')}`)
-                .then(response => {
-                    if (response.ok) return response.json()
-                    throw new Error('Network response was not ok.')
-                })
-                .then(data => {
-                    let chapters = JSON.parse(data['contents'])['data'];
-                    let maxChapter = 0;
-                    let maxDate = '';
-                    let maxTitle = '';
-                    for (var i = 0; i < chapters.length; i++) {
-                        let currChapter = chapters[i]['attributes']['chapter'];
-                        let currDate = chapters[i]['attributes']['createdAt'];
-                        let currTitle = chapters[i]['attributes']['title'];
-                        if (currChapter > maxChapter) {
-                            maxChapter = currChapter;
-                            maxDate = currDate;
-                            maxTitle = currTitle;
-                        }
-                    }
 
-                    var date1 = new Date(maxDate);
-                    var date2 = new Date();
-
-                    var Difference_In_Time = date2.getTime() - date1.getTime();
-                    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-                    document.getElementById("demo").innerHTML = Math.floor(Difference_In_Days) + " days";
-
-                    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                    document.getElementById("lastChapter").innerHTML = 'The last chapter was chapter <b>' + maxChapter + ', "' + maxTitle + '",</b> released on <b>'
-                        + date1.toLocaleDateString("en-US", options) + '.</b>'
-                });
-
-
-        </script>
     </div>
+    <script>
+        fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc')}`)
+            .then(response => {
+                if (response.ok) return response.json()
+                throw new Error('Network response was not ok.')
+            })
+            .then(data => {
+                let chapters = JSON.parse(data['contents'])['data'];
+                let maxChapter = 0;
+                let maxDate = '';
+                let maxTitle = '';
+                for (var i = 0; i < chapters.length; i++) {
+                    let currChapter = chapters[i]['attributes']['chapter'];
+                    let currDate = chapters[i]['attributes']['createdAt'];
+                    let currTitle = chapters[i]['attributes']['title'];
+                    if (currChapter > maxChapter) {
+                        maxChapter = currChapter;
+                        maxDate = currDate;
+                        maxTitle = currTitle;
+                    }
+                }
+
+                var date1 = new Date(maxDate);
+                var date2 = new Date();
+
+                var Difference_In_Time = date2.getTime() - date1.getTime();
+                var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+                document.getElementById("demo").innerHTML = Math.floor(Difference_In_Days) + " days";
+                var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById("lastChapter").innerHTML = 'The last chapter was chapter <b>' + maxChapter + ', "' + maxTitle + '",</b> released on <b>'
+                    + date1.toLocaleDateString("en-US", options) + '.</b>';
+
+                let plate = document.getElementById('plate');
+                console.log(plate);
+                let loading = document.getElementById('loading');
+                
+                plate.removeAttribute('hidden');
+                loading.setAttribute('hidden', 'true');
+            });
+
+
+    </script>
 </body>
 
 </html>
