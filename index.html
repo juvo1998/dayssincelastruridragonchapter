@@ -83,31 +83,17 @@
         <p id="lastChapter" class="stat"></p>
 
         <script>
-
-            // async function userAction() {
-            //     // const mangaDexUrl = 'http://api.allorigins.win/get?url=https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc';
-            //     const mangaDexUrl = 'http://api.allorigins.win/get?url=https%3A%2F%2Fapi.mangadex.org%2Fchapter%3Flimit%3D10%26manga%3D141609b6-cf86-4266-904c-6648f389cdc9%26translatedLanguage%255B%255D%3Den%26contentRating%255B%255D%3Dsafe%26contentRating%255B%255D%3Dsuggestive%26contentRating%255B%255D%3Derotica%26includeFutureUpdates%3D1%26order%255BcreatedAt%255D%3Dasc%26order%255BupdatedAt%255D%3Dasc%26order%255BpublishAt%255D%3Dasc%26order%255BreadableAt%255D%3Dasc%26order%255Bvolume%255D%3Dasc%26order%255Bchapter%255D%3Dasc';
-            //     const response = await fetch(mangaDexUrl);
-            //     const myJson = await response.json(); //extract JSON from the http response
-            //     document.getElementById("res").innerHTML = myJson;
-            //     console.log(JSON.stringify(JSON.parse(myJson['contents']), null, 2));
-            // }
-            // userAction();
-
-            // with fetch
             fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc')}`)
                 .then(response => {
                     if (response.ok) return response.json()
                     throw new Error('Network response was not ok.')
                 })
                 .then(data => {
-                    console.log(JSON.stringify(JSON.parse(data.contents), null, 2))
                     let chapters = JSON.parse(data['contents'])['data'];
                     let maxChapter = 0;
                     let maxDate = '';
                     let maxTitle = '';
                     for (var i = 0; i < chapters.length; i++) {
-                        console.log(JSON.stringify(chapters[i], null, 2));
                         let currChapter = chapters[i]['attributes']['chapter'];
                         let currDate = chapters[i]['attributes']['createdAt'];
                         let currTitle = chapters[i]['attributes']['title'];
@@ -116,20 +102,13 @@
                             maxDate = currDate;
                             maxTitle = currTitle;
                         }
-                        console.log('maxChapter: ' + maxChapter);
-                        console.log('maxDate: ' + maxDate);
                     }
 
                     var date1 = new Date(maxDate);
                     var date2 = new Date();
 
-                    // To calculate the time difference of two dates
                     var Difference_In_Time = date2.getTime() - date1.getTime();
-
-                    // To calculate the no. of days between two dates
                     var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-
-                    //To display the final no. of days (result)
                     document.getElementById("demo").innerHTML = Math.floor(Difference_In_Days) + " days";
 
                     var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
