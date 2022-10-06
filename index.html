@@ -7,13 +7,25 @@
 <meta content="#49C5F7" data-react-helmet="true" name="theme-color" />
 <link rel="icon" href="https://i.imgur.com/MIzZ9gC.png">
 <style>
-    p {
+    .plate {
+        margin-left: 400px;
+        margin-right: 400px;
+    }
+
+    .days {
         color: rgb(0, 0, 0);
         text-align: center;
         font-size: 200px;
         font-weight: bold;
-        margin-bottom: 0;
+        margin-bottom: 40px;
         font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .stat {
+        color: rgb(0, 0, 0);
+        font-size: 1em;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
     }
 
     .center {
@@ -22,37 +34,77 @@
         margin-right: auto;
         width: 50%;
     }
+
+    img {
+        margin-bottom: 40px;
+    }
 </style>
 
 <body>
-    <p id="demo"></p>
-    <p id="res"></p>
+    <div class="plate">
+        <p id="demo" class="days"></p>
+        <img src="ruri_bed.png" alt="Ruri Dragon in bed" class="center">
+        <p id="lastChapter" class="stat"></p>
 
-    <script>
+        <script>
 
-        async function userAction() {
-            const mangaDexUrl = 'https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc';
-            const response = await fetch(mangaDexUrl);
-            const myJson = await response.json(); //extract JSON from the http response
-            document.getElementById("res").innerHTML = myJson;
-        }
+            // async function userAction() {
+            //     // const mangaDexUrl = 'http://api.allorigins.win/get?url=https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc';
+            //     const mangaDexUrl = 'http://api.allorigins.win/get?url=https%3A%2F%2Fapi.mangadex.org%2Fchapter%3Flimit%3D10%26manga%3D141609b6-cf86-4266-904c-6648f389cdc9%26translatedLanguage%255B%255D%3Den%26contentRating%255B%255D%3Dsafe%26contentRating%255B%255D%3Dsuggestive%26contentRating%255B%255D%3Derotica%26includeFutureUpdates%3D1%26order%255BcreatedAt%255D%3Dasc%26order%255BupdatedAt%255D%3Dasc%26order%255BpublishAt%255D%3Dasc%26order%255BreadableAt%255D%3Dasc%26order%255Bvolume%255D%3Dasc%26order%255Bchapter%255D%3Dasc';
+            //     const response = await fetch(mangaDexUrl);
+            //     const myJson = await response.json(); //extract JSON from the http response
+            //     document.getElementById("res").innerHTML = myJson;
+            //     console.log(JSON.stringify(JSON.parse(myJson['contents']), null, 2));
+            // }
+            // userAction();
 
-        userAction();
+            // with fetch
+            fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc')}`)
+                .then(response => {
+                    if (response.ok) return response.json()
+                    throw new Error('Network response was not ok.')
+                })
+                .then(data => {
+                    console.log(JSON.stringify(JSON.parse(data.contents), null, 2))
+                    let chapters = JSON.parse(data['contents'])['data'];
+                    let maxChapter = 0;
+                    let maxDate = '';
+                    let maxTitle = '';
+                    for (var i = 0; i < chapters.length; i++) {
+                        console.log(JSON.stringify(chapters[i], null, 2));
+                        let currChapter = chapters[i]['attributes']['chapter'];
+                        let currDate = chapters[i]['attributes']['createdAt'];
+                        let currTitle = chapters[i]['attributes']['title'];
+                        if (currChapter > maxChapter) {
+                            maxChapter = currChapter;
+                            maxDate = currDate;
+                            maxTitle = currTitle;
+                        }
+                        console.log('maxChapter: ' + maxChapter);
+                        console.log('maxDate: ' + maxDate);
+                    }
 
-        var date1 = new Date("07/24/2022");
-        var date2 = new Date();
+                    var date1 = new Date(maxDate);
+                    var date2 = new Date();
 
-        // To calculate the time difference of two dates
-        var Difference_In_Time = date2.getTime() - date1.getTime();
+                    // To calculate the time difference of two dates
+                    var Difference_In_Time = date2.getTime() - date1.getTime();
 
-        // To calculate the no. of days between two dates
-        var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+                    // To calculate the no. of days between two dates
+                    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
 
-        //To display the final no. of days (result)
-        document.getElementById("demo").innerHTML = Math.floor(Difference_In_Days) + " days";
-    </script>
+                    //To display the final no. of days (result)
+                    document.getElementById("demo").innerHTML = Math.floor(Difference_In_Days) + " days";
 
-    <img src="ruri_bed.png" alt="Ruri Dragon in bed" class="center">
+                    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                    document.getElementById("lastChapter").innerHTML = 'The last chapter was chapter <b>' + maxChapter + ', "' + maxTitle + '",</b> released on <b>'
+                        + date1.toLocaleDateString("en-US", options) + '</b>.'
+                });
+
+
+        </script>
+
+    </div>
 </body>
 
 </html>
