@@ -201,13 +201,17 @@
 
     </div>
     <script>
-        fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc')}`)
+        // let url = `https://api.allorigins.win/get?url=${encodeURIComponent('https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc')}`;
+        let url = 'https://ruri-cors-proxy.juvo1998.workers.dev/?https://api.mangadex.org/chapter?limit=10&manga=141609b6-cf86-4266-904c-6648f389cdc9&translatedLanguage%5B%5D=en&contentRating%5B%5D=safe&contentRating%5B%5D=suggestive&contentRating%5B%5D=erotica&includeFutureUpdates=1&order%5BcreatedAt%5D=asc&order%5BupdatedAt%5D=asc&order%5BpublishAt%5D=asc&order%5BreadableAt%5D=asc&order%5Bvolume%5D=asc&order%5Bchapter%5D=asc';
+        fetch(url)
             .then(response => {
                 if (response.ok) return response.json()
-                throw new Error('Network response was not ok.')
+                // console.log(JSON.stringify(response, null, 2));
+                throw new Error('Network response was not ok.');
             })
             .then(data => {
-                let chapters = JSON.parse(data['contents'])['data'];
+                // console.log(data);
+                let chapters = data['data'];
                 let maxChapter = 0;
                 let maxDate = '';
                 let maxTitle = '';
